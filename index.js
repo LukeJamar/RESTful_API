@@ -122,43 +122,61 @@ app.post('/user', (req, res) => {
 
 // GET a cart from a particular user ID
 app.get('/user/:userId/cart', (req, res) => {
-    users.find((user) => {
-        // Returns cart for given ID and 404 error otherwise
-        if (user.userId == req.params.userId) {
-            res.send(user.cart);
-        } else {
-            res.send(404)
-        }
+    const foundUser = users.find((user) => {
+        return user.userId == req.params.userId
     }); 
+
+    // Returns cart for given ID and 404 error otherwise
+    if (foundUser) {
+        res.send(users[parseInt(req.params.userId)].cart);
+    } else {
+        res.send(404)
+    }
+ 
 });
+
 
 // DELETE clears the cart of a particular user
 app.delete('/user/del/:userId/cart', (req, res) => {
-    users.find((user) => {
-        // Clears cart if found and gives 404 otherwise
-        if (user.userId == req.params.userId) {
-            user.cart = [];
-            res.send(user);
-        } else {
-            res.send(404);
-        }
+    // Find correct user to clear cart
+    const foundUser = users.find((user) => {
+        return user.userId == req.params.userId
     });
+
+    // check if user is found and if cart is empty
+    if (foundUser) {
+        if (users[parseInt(req.params.userId)].cart.cartItems) {
+            users[parseInt(req.params.userId)].cart.cartItems = [];
+            res.send(users[parseInt(req.params.userId)]);
+        }
+    } else {
+        res.send(404);
+    }
+
 });
 
 // POST storeItem into Cart array for specific user
 app.post('/cart/:cartId/cartItem', (req, res) => {
-    shoppingCarts.find((cart) => {
-        if(cart.cartId == req.params.cartId) {
-            // Creates new cart item for pre-exising array
-            let newCartItem = {};
-            newCartItem.itemId = req.body.itemId;
-            newCartItem.quantity = req.body.quantity;
-            cart.cartItems.push(newCartItem);
-            res.send(cart);
-        } else {
-            res.send(404);
-        }
-    });    
+    // Find the cart with the right Id
+    const foundCart = shoppingCarts.find((cart) => {
+        return cart.cartId == req.params.cartId
+    });   
+
+    if (foundCart) {
+        let newCartItem = {};
+        newCartItem.itemId = req.body.itemId;
+        newCartItem.quantity = req.body.quantity;
+        shoppingCarts[parseInt(req.params.cartId)].cartItems.push(newCartItem);
+        res.send(shoppingCarts[parseInt(req.params.cartId)]);
+    } else {
+        res.send(404);
+    }
+
+});   
+
+// DELETE item from a cart
+app.delete('/cart/:cartId/cartItem/:cartItemId', (req, res) => {
+
 });
 
 app.listen(8080);
