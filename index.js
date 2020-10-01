@@ -15,6 +15,7 @@ let storeItems = [];
 let userCount = 0;
 let cartCount = 0;
 
+// placeholder user to show in client
 const singleUser = {
     "userId": users.length,
     "firstName": "Luke",
@@ -23,13 +24,14 @@ const singleUser = {
     "cart": cart = [],
 };
 
+users.push(singleUser);
+
+// Placeholder for what a store Item should look like
 const instoreItem = {
     "storeItemId": storeItems.length,
-
-
+    "itemName": "RTX 3090",
+    "itemDescription": "Your dream proccessor"
 }
-
-users.push(singleUser);
 
 // GET all users (delete before publishing)
 app.get('/user', (req, res) => {
@@ -40,13 +42,13 @@ app.get('/user', (req, res) => {
 app.get('/user/:userId', (req, res) => {
     const foundUser = users.find((user) => {
         return user.userId == req.params.userId
-    })    
+    });    
 
-    res.send(foundUser);
+    res.send(foundUser ? foundUser: 404);
 
-})
+});
 
-// POST new user 
+// POST new user: gets new user from the client body
 app.post('/user', (req, res) => {
     let newUser = {};
 
