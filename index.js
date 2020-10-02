@@ -1,4 +1,3 @@
-const { DH_NOT_SUITABLE_GENERATOR } = require('constants');
 // C.S.3320 Internet Software Development
 // Due Date: 10/03/2020
 // Author: Frederick Jamar flj5
@@ -6,6 +5,7 @@ const { DH_NOT_SUITABLE_GENERATOR } = require('constants');
 // Javascript file for basic RESTApi implementation of 
 // ecommerce web application.
 
+const { DH_NOT_SUITABLE_GENERATOR } = require('constants');
 const express = require('express');
 const { get } = require('http');
 const app = express();
@@ -53,7 +53,7 @@ storeItemCount++;
 
 const instoreItemFive = {
     "storeItemId": storeItemCount,
-    "itemName": "Water",
+    "itemName": "Cat toy",
     "itemDescription": "Is in fact wet"
 }
 storeItems.push(instoreItemFive);
@@ -201,6 +201,17 @@ app.get('/storeItem/:storeItemId', (req, res) => {
     });    
 
     res.send(foundStoreItem ? foundStoreItem: 404 );
+});
+
+// GET store item from querey parameter
+app.get('/storeItem', (req, res) => {
+    let foundItems = storeItems;
+    if (req.query.itemName) {
+        foundItems = storeItems.filter( (item) => {
+            return item.itemName.includes(req.query.itemName);
+        })
+    }
+    res.send(foundItems);
 });
 
 app.listen(8080);
