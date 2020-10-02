@@ -1,3 +1,4 @@
+const { DH_NOT_SUITABLE_GENERATOR } = require('constants');
 // C.S.3320 Internet Software Development
 // Due Date: 10/03/2020
 // Author: Frederick Jamar flj5
@@ -176,7 +177,30 @@ app.post('/cart/:cartId/cartItem', (req, res) => {
 
 // DELETE item from a cart
 app.delete('/cart/:cartId/cartItem/:cartItemId', (req, res) => {
+    // Find if cartId exists
+    const foundCart = shoppingCarts.find((cart) => {
+        return cart.cartId == req.params.cartId
+    });
+    // Check index of cartItemId
+    const fndCartItemIndex = 
+    shoppingCarts[parseInt(req.params.cartId)].cartItems.indexOf(req.params.cartItemId);
 
+    if (foundCart) {
+        const foundCartItem = 
+        shoppingCarts[parseInt(req.params.cartId)].cartItems.splice(fndCartItemIndex,1);
+        res.send(foundCartItem ? foundCartItem: 404);
+    } else {
+        res.send(404);
+    }
+});
+
+// GET Store Items from store Item IDs
+app.get('/storeItem/:storeItemId', (req, res) => {
+    const foundStoreItem = storeItems.find((item) => {
+        return item.storeItemId == req.params.storeItemId
+    });    
+
+    res.send(foundStoreItem ? foundStoreItem: 404 );
 });
 
 app.listen(8080);
