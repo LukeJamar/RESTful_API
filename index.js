@@ -80,13 +80,6 @@ users.push(singleUser);
 userCount++;
 cartCount++;
 
-
-// GET all users (delete before publishing)
-app.get('/user', (req, res) => {
-    res.send(users)
-})
-
-
 // GET user by ID funtion
 app.get('/user/:userId', (req, res) => {
     const foundUser = users.find((user) => {
